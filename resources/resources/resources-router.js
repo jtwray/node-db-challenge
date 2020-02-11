@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const resourceData = req.body;
 
-    !resourceData.name ?
+    !resourceData.resource_name ?
         res.status(400).json({ message: `A Name is required to create a new resource in the database.` })
         :
         R.add(resourceData)

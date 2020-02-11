@@ -14,9 +14,9 @@ function find() {
 }
 
 function findById(id) {
-    return [db('resources')
+    return db('resources')
         .where({ id })
-        .first(),]
+        .first()
 }
 
 

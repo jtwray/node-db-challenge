@@ -18,16 +18,33 @@ router.get('/', async (req, res) => {
 
 // --[GET] /projects/:id | fetch Project by :id |  
 
-router.get('/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const project = await Projects.findById(id);
-        res.status(200).json({ project })
-    } catch (err) {
-        res.status(500).json({ message: `serverside error fetching the project with id:[${id}]` })
-    }
-});
+// router.get('/:id', async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const project = await Projects.findById(id);
+//         res.status(200).json({ project })
+//     } catch (err) {
+//         console.error(err)
+//         res.status(500).json({ message: `serverside error fetching the project with id:[${id}]` })
+//     }
+// });
 
+router.get('/:id', (req, res) => {
+    // const { id } = req.params;
+
+    Projects.findById(req.params.id)
+        .then(project => {
+            project ?
+                res.status(200).json({ project })
+                :
+                res.status(400).json({ errorMessage: `error fetching the project` });console.error();
+        })
+        .catch(err => {
+            res.status(500).json({ message: `serverside ${err} fetching the project with id:[${id}] + ${err}` })
+            console.error(err);console.log("the error",err);
+
+        })
+})
 
 // [GET]  /projects/:id/resources  | fetch Resources for Project with :id |
 router.get('/:id/resources', async (req, res) => {
@@ -35,8 +52,21 @@ router.get('/:id/resources', async (req, res) => {
     try {
         const project_resourcces = await Projects.findResources(id);
         res.status(200).json({ project_resources })
-    } catch (err) {
+    } catch (err) {console.error(err)
         res.status(500).json({ message: `serverside error fetching the resources for the project with id:[${id}]` })
+    }
+});
+
+
+// [GET]  /projects/:id/tasks | fetch tasks for Project with :id |
+
+router.get('/:id/tasks', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const project_task = await Projects.findTasks(id);
+        res.status(200).json({ project_task })
+    } catch (err) {console.error(err)
+        res.status(500).json({ message: `serverside error fetching the tasks for the project with id:[${id}]` })
     }
 });
 
@@ -46,10 +76,10 @@ router.get('/:id/resources', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const projectData = req.body;
-    !projectData.name ?
+    !projectData.project_name ?
         res.status(400).json({ message: `A Name is required to create a new project in the database.` })
         :
-        projects.add(projectData)
+        Projects.add(projectData)
             .then(project => {
                 res.status(201).json(project);
             })
@@ -93,10 +123,10 @@ router.post('/:id/tasks', (req, res) => {
     !taskData.description ?
         res.status(400).json({ message: `A description is required to creates new task for this project. Try again mi amigo.` })
         :
-        projects.findById(id)
+        Projects.findById(id)
             .then(project => {
                 if (project) {
-                    projects.addtask(taskData, id)
+                    Projects.addTask(taskData, id)
                         .then(task => {
                             res.status(201).json(task);
                         })
@@ -105,12 +135,12 @@ router.post('/:id/tasks', (req, res) => {
                 }
             })
             .catch(err => {
-                res.status(500).json({ message: 'Failed to create new task' });
+                res.status(500).json({ message: 'Failed to create new task' });console.error(err)
             });
 });
 
 
-module.exports=router;
+module.exports = router;
 
 
 
