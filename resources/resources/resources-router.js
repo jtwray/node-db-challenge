@@ -1,6 +1,6 @@
 const express = require('express');
 
-const R = require('./scheme-model.js');
+const R = require('./resources-model.js');
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
 });
 
 // --[GET] /api/resources | fetches all Resources from the Resources table | 
-router.get('/', (req, res) => {
+router.get('/', async(req, res) => {
     try {
         const resources = await R.find("resources") //select all rows from table resources
         res.status(200).json({ resources })
@@ -32,3 +32,6 @@ router.get('/', (req, res) => {
     }
 
 })
+
+
+module.exports=router;
