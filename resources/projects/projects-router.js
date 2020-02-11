@@ -50,9 +50,9 @@ router.get('/:id', (req, res) => {
 router.get('/:id/resources', async (req, res) => {
     const { id } = req.params;
     try {
-        const project_resourcces = await Projects.findResources(id);
+        const project_resources = await Projects.findProjectResources(id);
         res.status(200).json({ project_resources })
-    } catch (err) {console.error(err)
+    } catch (err) {console.error("the_new_errorisreallyhere",err);
         res.status(500).json({ message: `serverside error fetching the resources for the project with id:[${id}]` })
     }
 });
@@ -65,7 +65,7 @@ router.get('/:id/tasks', async (req, res) => {
     try {
         const project_task = await Projects.findTasks(id);
         res.status(200).json({ project_task })
-    } catch (err) {console.error(err)
+    } catch (err) {console.error(err);
         res.status(500).json({ message: `serverside error fetching the tasks for the project with id:[${id}]` })
     }
 });

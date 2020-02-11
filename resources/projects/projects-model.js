@@ -7,7 +7,7 @@ module.exports = {
     find,
     findById,
     findTasks,
-    findResources,
+    findProjectResources,
     add,
     addResource,
     addTask,
@@ -37,16 +37,16 @@ console.log(id)
         .first()
 }
 
-function findResources(id) {
+function findProjectResources(id) {
 
   
 
-    return db('project_resources as prs')
-        .join('projects as pr', 'pr.id', 'prs.project_id')
-        .select('prs.project_id', 'pr.project_name', 'prs.resource_id', 'prs.instructions')
-        .join('')
-        .where('prs.project_id', id)
-        .orderBy('resource_id', 'asc')
+    return db('resources as rs')
+        .join('project_resources as p_rs', 'rs.id', 'p_rs.resource_id')
+        .join('projects as p', 'p_rs.project_id', 'p.id')
+        .select('p_rs.project_id', 'p.project_name', 'rs.resource_name', 'p.description')
+        .where('p_rs.project_id', id)
+        // .orderBy('resource_id', 'asc')
 }
 
 function add(project) {
